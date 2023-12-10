@@ -17,7 +17,7 @@ An API will be introduced soon to enhance the functionality and provide more fea
 
 ## Parent Company
 
-This project is developed by [The Nebula devs](https://nebuladevs.com/), a dedicated team passionate about creating innovative solutions.
+This project is under by [The Nebula Devs](https://nebuladevs.tech/), a dedicated team passionate about creating innovative solutions.
 
 Feel free to contribute and improve the project!
 

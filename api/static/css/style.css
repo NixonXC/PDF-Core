@@ -62,7 +62,9 @@ button:hover {
 
 .main {
     color: white;
-    margin-left: 10%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
     padding: 1em;
     margin-top: 5%;
 }
@@ -74,7 +76,6 @@ button:hover {
 
 .main p {
     font-size: 1.3em;
-    width: 600px;
     font-family: 'Montserrat';
     line-height: 30px;
     margin-top: -1%;
@@ -99,7 +100,7 @@ button:hover {
     border: none;
     color: white;
     font-size: 1em;
-    margin-left: 10px;
+    margin-left: 5px;
     font-family: 'Montserrat';
     outline: none;
     width: 150px;
@@ -111,10 +112,12 @@ button:hover {
 .main button {
     margin-top: 1%;
     padding: 0.8em;
-    border-radius: 30px;
+    border-radius: 8px;
+    margin-right: auto;
     width: 150px;
     cursor: pointer;
-    display: block;
+    margin-left: 1%;
+    display: inline;
     background-color: #8ADDC9;
     border: none;
     transition: 0.3s ease-in-out;
@@ -154,16 +157,22 @@ button:hover {
         display: block;
         text-align: left;
     }
-
+    .main {
+        margin-left: 10%;
+        text-align: left;
+    }
     .main p {
         max-width: 350px;
+        text-align: left;
     }
     .main select {
         margin-top: 10px;
+        margin-left: 10%;
         margin-left: 0;
     }
     .main button {
         margin-top: 5%;
+        display: block;
         border-radius: 4px;
     }
 }

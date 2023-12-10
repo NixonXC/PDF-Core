@@ -66,10 +66,12 @@ def search():
         data = fetch_pdf_links_google(query=pdf_name)
         print(data)
         return redirect(data[0])
-    else:
+    elif engine == "archive":
         data = search_archive_org(book_title=pdf_name)
         print(data)
         return redirect(data[0]["url"])
+    else:
+        return redirect("/")
 
     
 if __name__ == '__main__':

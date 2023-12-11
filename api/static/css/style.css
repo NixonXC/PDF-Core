@@ -37,8 +37,8 @@ body {
     -webkit-transition: 0.3s ease-in-out;
     width: 8%;
     border-radius: 30px;
-    font-family: 'Poppins';
-    font-weight: 500;
+    font-family: 'Montserrat';
+    font-weight: 900;
     text-align: center;
     text-decoration: none;
     margin-right: 10%;
@@ -127,8 +127,9 @@ button:hover {
     border: none;
     transition: 0.3s ease-in-out;
     -webkit-transition: 0.3s ease-in-out;
-    font-family: 'Poppins';
-    font-size: 1em;
+    font-family: 'Montserrat';
+    font-size: 1.1em;
+    font-weight: 900;
 }
 
 @media screen and (max-width: 600px) {

@@ -8,6 +8,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+from bs4 import BeautifulSoup
+import requests
+
+def fetch_anna(book_name):
+    return redirect("/")
+
+
 def fetch_pdf_links_google(query):
     base_url = f"https://www.google.com/search?q={query}&num=3&as_filetype=pdf"
     headers = {
@@ -70,10 +77,11 @@ def search():
         data = search_archive_org(book_title=pdf_name)
         print(data)
         return redirect(data[0]["url"])
+    elif engine == "anna":
+        return "Anna's archive scraping is still under development, please  try to search via Google or archive.org"
     else:
         return redirect("/")
 
     
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
- 

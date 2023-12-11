@@ -102,13 +102,18 @@ button:hover {
     font-size: 1em;
     margin-left: 5px;
     font-family: 'Montserrat';
+    -webkit-appearance: button;
+    appearance: button;
     outline: none;
-    width: 150px;
+    width: 160px;
+    border-right: 10px solid transparent;
     border-radius: 8px;
     background-color: #0f2722;
     padding: 1em;
 }
-
+.main option {
+    border: none;
+}
 .main button {
     margin-top: 1%;
     padding: 0.8em;

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from bs4 import BeautifulSoup
 import requests
+import os
 
 app = Flask(__name__)
 
@@ -25,7 +26,7 @@ def fetch_pdf_links_google(query):
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        pdf_links = [a['href'] for a in soup.find_all('a', href=True) if '.pdf' in a['href']][:1]
+        pdf_links = [a['href'] for a in soup.find_all('a', href=True) if '.pdf' in a['href']][:5]
         return pdf_links
     else:
         print(f"Error: Unable to fetch Google search results. Status code: {response.status}")
@@ -46,7 +47,7 @@ def search_archive_org(book_title):
         docs = data.get('response', {}).get('docs', [])
 
         results = []
-        for doc in docs[:1]:  # Get up to three results
+        for doc in docs[:3]:  # Get up to three results
             identifier = doc.get('identifier', '')
             title = doc.get('title', '')
             creator = doc.get('creator', '')
@@ -69,18 +70,24 @@ def search_archive_org(book_title):
 def search():
     pdf_name = request.form.get("pdf_name")
     engine = request.form.get("engine")
+    
+    results = []  # Initialize results list outside the if-else blocks
+
     if engine == "google":
-        data = fetch_pdf_links_google(query=pdf_name)
-        print(data)
-        return redirect(data[0])
+        pdf_links = fetch_pdf_links_google(query=pdf_name)
+        for pdf_link in pdf_links:
+            filename = os.path.basename(pdf_link)
+            # Append each result to the results list
+            results.append({'pdf_name': filename, 'pdf_url': pdf_link})
     elif engine == "archive":
-        data = search_archive_org(book_title=pdf_name)
-        print(data)
-        return redirect(data[0]["url"])
+        archive_results = search_archive_org(book_title=pdf_name)
+        results = [{'pdf_name': result['title'], 'pdf_url': result['url']} for result in archive_results]
     elif engine == "anna":
-        return "Anna's archive scraping is still under development, please  try to search via Google or archive.org"
+        return "Anna's archive scraping is still under development, please try to search via Google or archive.org"
     else:
         return redirect("/")
+
+    return render_template('results.html', results=results)
 
     
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import requests
 import os
 
@@ -15,6 +15,56 @@ import requests
 def fetch_anna(book_name):
     return redirect("/")
 
+base_url = r'https://annas-archive.org'
+
+class Annas_Archive_Parser():
+    def __init__(self, params):
+        self.params = params
+
+    def get_top_five_links(self):
+        book_name = self.params["book-name"]
+        url = f"https://annas-archive.org/search?index=&q={book_name}"
+        response = requests.get(url=url)
+        data = response.text
+
+        soup = BeautifulSoup(data, 'html.parser')
+
+        # Find the container of each result
+        result_containers = soup.find_all("div", class_="h-[125] flex flex-col justify-center")
+
+        top_five_links = []
+        for result in result_containers[:5]:
+            link = result.find("a")
+            top_five_links.append(link)
+
+        links_1 = []
+        for link in top_five_links:
+            href_value = link.get('href')
+            links_1.append(href_value)
+
+        commented_a_tag = soup.find_all(string=lambda text: isinstance(text, Comment) and 'class="js-vim-focus custom-a' in text)
+
+        links_2 = []
+        for a_tag in commented_a_tag:
+            a_soup = BeautifulSoup(a_tag, 'html.parser')
+            href_value = a_soup.find('a')['href']
+            links_2.append(href_value)
+
+        links_1.extend(links_2)
+
+        return links_1
+    
+    def url_returns(self): 
+        links = self.get_top_five_links()
+        data = links[:5]
+        final_links = []
+        for item in data: 
+            final_url = base_url + item
+            final_links.append({
+                'id': final_url.replace("https://annas-archive.org/md5/",""),
+                'url': final_url,
+            })
+        return final_links
 
 def fetch_pdf_links_google(query):
     base_url = f"https://www.google.com/search?q={query}&num=3&as_filetype=pdf"
@@ -71,7 +121,7 @@ def search():
     pdf_name = request.form.get("pdf_name")
     engine = request.form.get("engine")
     
-    results = []  # Initialize results list outside the if-else blocks
+    results = []
 
     if engine == "google":
         pdf_links = fetch_pdf_links_google(query=pdf_name)
@@ -83,7 +133,9 @@ def search():
         archive_results = search_archive_org(book_title=pdf_name)
         results = [{'pdf_name': result['title'], 'pdf_url': result['url']} for result in archive_results]
     elif engine == "anna":
-        return "Anna's archive scraping is still under development, please try to search via Google or archive.org"
+        initialise = Annas_Archive_Parser(params={"book-name": "Art of war"})
+        final_links = initialise.url_returns()
+        results = [{'pdf_name': f"ID: {links['id']}", 'pdf_url': links['url']} for links in final_links]
     else:
         return redirect("/")
 
